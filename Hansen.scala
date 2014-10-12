@@ -38,27 +38,27 @@ object Hansen {
         .*(1/sumProp)
     }
     
-    val aceticAcid = Solvent(6.8, 6.0, 9.2)
+    val ACETIC_ACID = Solvent(6.8, 6.0, 9.2)
     
-    val dioctylPhtalate = Solvent(8.1, 3.4, 1.5)
+    val DIOCTYL_PHTALATE = Solvent(8.1, 3.4, 1.5)
     
-    val nitroamine = Solvent(8.6, 6.8, 0.0)
+    val NITROAMINE = Solvent(8.6, 6.8, 0.0)
     
     /* Mystery solvent MEP */
-    val mep = Solvent(7.8, 4.4, 2.5)
+    val MEP = Solvent(7.8, 4.4, 2.5)
     
   }
   
   def main(args: Array[String]) {
     val prospective =
       Solvent.combine(List(
-        (Solvent.aceticAcid,      0.2),
-        (Solvent.dioctylPhtalate, 0.5),
-        (Solvent.nitroamine,      0.3)
+        (Solvent.ACETIC_ACID,      0.2),
+        (Solvent.DIOCTYL_PHTALATE, 0.5),
+        (Solvent.NITROAMINE,      0.3)
       ))
     
     print("R-value for 20% AA, 50% DP, 30% NA:")
-    println(prospective.r_value(Solvent.mep))
+    println(prospective.r_value(Solvent.MEP))
     
     val props = 0.0 to 1.0 by 0.01
     var bestProportion = (0.0,0.0,0.0)
@@ -71,11 +71,11 @@ object Hansen {
         na  = 1.0 - aa - dp) {
       val prospective = 
         Solvent.combine(List(
-          (Solvent.aceticAcid,      aa),
-          (Solvent.dioctylPhtalate, dp),
-          (Solvent.nitroamine,      na)))
+          (Solvent.ACETIC_ACID,      aa),
+          (Solvent.DIOCTYL_PHTALATE, dp),
+          (Solvent.NITROAMINE,       na)))
       
-      val currentR = prospective.r_value(Solvent.mep)
+      val currentR = prospective.r_value(Solvent.MEP)
       
       if (currentR < bestRvalue) {
         bestRvalue = currentR
