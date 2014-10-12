@@ -17,14 +17,14 @@ impl Solvent {
             h_param: self.h_param * factor}
     }
     
-    fn add(&self, other: Solvent) -> Solvent {
+    fn add(&self, other: &Solvent) -> Solvent {
         Solvent {
             d_param: self.d_param + other.d_param,
             p_param: self.p_param + other.p_param,
             h_param: self.h_param + other.h_param}
     }
     
-    pub fn r_value(&self, other: Solvent) -> f64 {
+    pub fn r_value(&self, other: &Solvent) -> f64 {
         let diffs = vec![
             self.d_param - other.d_param,
             self.p_param - other.p_param,
@@ -61,13 +61,15 @@ pub fn combine(proportionated: &[(Solvent, f64)]) -> Solvent {
     
     proportionated.iter()
         .map( |&sp| { let (s,p) = sp; s.scale(p) } )
-        .fold(NULL_SOLVENT, |s1,s2| s1.add(s2))
+        .fold(NULL_SOLVENT, |s1,s2| s1.add(&s2))
         .scale(1.0f64/sum_proportion)
 }
 
 }
 
 fn main() {
+    use std::iter::range_inclusive;
+    
     let prospective =
         solvent::combine([
             (solvent::ACETIC_ACID,      2.0),
@@ -76,7 +78,7 @@ fn main() {
         ]);
     
     println!("R-value for 20% AA, 50% DP 30% NA: {}", 
-            prospective.r_value(solvent::MEP));
+            prospective.r_value(&solvent::MEP));
     
     let mut best_proportion = (0f64, 0f64, 0f64);
     let mut best_r_value    = std::f64::MAX_VALUE;
@@ -84,8 +86,8 @@ fn main() {
     
     let precision = 100i;
     
-    for aa in std::iter::range_inclusive(0i, precision) {
-        for dp in std::iter::range_inclusive(0i, precision) {
+    for aa in range_inclusive(0i, precision) {
+        for dp in range_inclusive(0i, precision) {
             if aa + dp <= precision {
                 let na = precision - aa - dp;
                 let prospective =
@@ -95,7 +97,7 @@ fn main() {
                         (solvent::NITROAMINE,       na as f64)
                     ]);
                 
-                let current_r = prospective.r_value(target_solvent);
+                let current_r = prospective.r_value(&target_solvent);
                 
                 if current_r < best_r_value {
                     best_proportion = (aa as f64, dp as f64, na as f64);
