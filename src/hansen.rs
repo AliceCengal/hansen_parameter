@@ -25,7 +25,7 @@ impl Solvent {
     }
     
     pub fn r_value(&self, other: &Solvent) -> f64 {
-        let diffs = vec![
+        let diffs = [
             self.d_param - other.d_param,
             self.p_param - other.p_param,
             self.h_param - other.h_param];
