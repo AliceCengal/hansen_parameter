@@ -57,8 +57,8 @@ object Hansen {
         (Solvent.nitroamine,      0.3)
       ))
     
-    println(s"R-value for 20% AA, 50% DP, 30% NA: ${
-        prospective.r_value(Solvent.mep)}")
+    print("R-value for 20% AA, 50% DP, 30% NA:")
+    println(prospective.r_value(Solvent.mep))
     
     val props = 0.0 to 1.0 by 0.01
     var bestProportion = (0.0,0.0,0.0)

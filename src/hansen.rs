@@ -80,7 +80,7 @@ fn main() {
             prospective.r_value(Solvent::mep()));
     
     let mut best_proportion = (0f64, 0f64, 0f64);
-    let mut best_r_value = 1000f64;
+    let mut best_r_value = std::f64::MAX_VALUE;
     let target_solvent = Solvent::mep();
     
     let precision = 100i;
