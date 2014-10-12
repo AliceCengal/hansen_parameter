@@ -108,7 +108,9 @@ fn main() {
     
     let (aa, dp, na) = best_proportion;
     let sum = aa + dp + na;
-    println!("Best match for MEP is {}% AA, {}% DP and {}% NA with r_value: {}",
-            aa/sum*100.0, dp/sum*100.0, na/sum*100.0, best_r_value);
-    
+    println!("Best match for MEP is:");
+    println!("{}% Acetic Acid", aa/sum*100.0);
+    println!("{}% Dioctyl Phtalate", dp/sum*100.0);
+    println!("{}% Nitroamine", na/sum*100.0);
+    println!("with R value: {}", best_r_value);
 }

@@ -84,8 +84,11 @@ object Hansen {
     }
     
     val (aa, dp, na) = bestProportion
-    println(s"Best match for MEP is ${aa*100}% AA, ${dp*100
-        }% DP and ${na*100}% NA with r_value: ${bestRvalue}")
+    println("Best match for MEP is:")
+    println(s"${aa*100}% Acetic Acid")
+    println(s"${dp*100}% Dioctyl Phtalate")
+    println(s"${na*100}% Nitroamine")
+    println(s"with R value: ${bestRvalue}")
   }
   
 }
