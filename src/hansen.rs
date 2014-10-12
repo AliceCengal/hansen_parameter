@@ -8,22 +8,26 @@ pub struct Solvent {
     h_param: f64
 }
 
-impl Solvent {
-    
-    fn scale(&self, factor: f64) -> Solvent {
-        Solvent {
-            d_param: self.d_param * factor,
-            p_param: self.p_param * factor,
-            h_param: self.h_param * factor}
-    }
-    
+impl Add<Solvent, Solvent> for Solvent {
     fn add(&self, other: &Solvent) -> Solvent {
         Solvent {
             d_param: self.d_param + other.d_param,
             p_param: self.p_param + other.p_param,
             h_param: self.h_param + other.h_param}
     }
-    
+}
+
+impl Mul<f64, Solvent> for Solvent {
+    fn mul(&self, factor: &f64) -> Solvent {
+        Solvent {
+            d_param: self.d_param * *factor,
+            p_param: self.p_param * *factor,
+            h_param: self.h_param * *factor}
+    }
+}
+
+impl Solvent {
+
     pub fn r_value(&self, other: &Solvent) -> f64 {
         let diffs = [
             self.d_param - other.d_param,
@@ -33,7 +37,7 @@ impl Solvent {
             .map(|&param| param * param)
             .fold(0.0f64, |sum, param| sum + param)
     }
-    
+
 }
 
 /* Because monoid. */
@@ -58,34 +62,34 @@ pub fn combine(proportionated: &[(Solvent, f64)]) -> Solvent {
         proportionated.iter()
             .map(|&sp| { let (_,p) = sp; p })
             .fold(0.0f64, |sum, p| sum + p );
-    
+
     proportionated.iter()
-        .map( |&sp| { let (s,p) = sp; s.scale(p) } )
-        .fold(NULL_SOLVENT, |s1,s2| s1.add(&s2))
-        .scale(1.0f64/sum_proportion)
+        .map( |&sp| { let (s,p) = sp; s * p } )
+        .fold(NULL_SOLVENT, |s1,s2| s1 + s2)
+        * (1.0f64/sum_proportion)
 }
 
 }
 
 fn main() {
     use std::iter::range_inclusive;
-    
+
     let prospective =
         solvent::combine([
             (solvent::ACETIC_ACID,      2.0),
             (solvent::DIOCTYL_PHTALATE, 5.0),
             (solvent::NITROAMINE,       3.0)
         ]);
-    
-    println!("R-value for 20% AA, 50% DP 30% NA: {}", 
+
+    println!("R-value for 20% AA, 50% DP 30% NA: {}",
             prospective.r_value(&solvent::MEP));
-    
+
     let mut best_proportion = (0f64, 0f64, 0f64);
     let mut best_r_value    = std::f64::MAX_VALUE;
     let target_solvent      = solvent::MEP;
-    
+
     let precision = 100i;
-    
+
     for aa in range_inclusive(0i, precision) {
         for dp in range_inclusive(0i, precision) {
             if aa + dp <= precision {
@@ -96,9 +100,9 @@ fn main() {
                         (solvent::DIOCTYL_PHTALATE, dp as f64),
                         (solvent::NITROAMINE,       na as f64)
                     ]);
-                
+
                 let current_r = prospective.r_value(&target_solvent);
-                
+
                 if current_r < best_r_value {
                     best_proportion = (aa as f64, dp as f64, na as f64);
                     best_r_value = current_r;
@@ -106,7 +110,7 @@ fn main() {
             }
         }
     }
-    
+
     let (aa, dp, na) = best_proportion;
     let sum = aa + dp + na;
     println!("Best match for MEP is:");
