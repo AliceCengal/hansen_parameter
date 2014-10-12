@@ -1,9 +1,9 @@
 [package]
 
-name = "hello_world"
+name = "hansen"
 version = "0.0.1"
-authors = [ "Your name <you@example.com>" ]
+authors = [ "Athran <cengallut@gmail.com>" ]
 
 [[bin]]
 
-name = "script"
+name = "hansen"
